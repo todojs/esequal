@@ -3,6 +3,10 @@
     "use strict";
 
     function equal(a, b) {
+        if (a === b) {
+            return true;
+        }
+        return false;
     }
 
     // Export for node and browser
