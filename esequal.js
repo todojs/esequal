@@ -39,9 +39,20 @@
                     if (a.constructor === b.constructor) {  // It's the same constructor and as result is the same type
                         return equal.VALUE_AND_TYPE;
                     } else {
-                        return equal.VALUE;                 // Equal value (different type)
+                        if (options.nonStrict) {            // Non strict comparison (optional)
+                            return equal.VALUE;             // Equal value (different type)
+                        }
+                        return equal.NOT_EQUAL;             // Strict comparison
                     }
                 }
+                /* jshint -W116 */
+                if (options.nonStrict &&                    // Non strict comparison (optional)
+                    aValue == bValue)
+                {
+                    return equal.VALUE;                     // Equal value (different type)
+                }
+                /* jshint +W116 */
+                return equal.NOT_EQUAL;                     // Not equal
             }
         }
         return equal.NOT_EQUAL;                             // Not equal

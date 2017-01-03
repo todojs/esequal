@@ -401,6 +401,32 @@ console.assert(  equal( boolean6, boolean7 ) );
 console.assert(  equal( boolean6, boolean7 ) === equal.VALUE_AND_TYPE );
 console.log( '-- Ok' );
 
+console.log( 'Date should be compare with number when "nonStrict" option is true' );
+var date5 = new Date();
+var numDate = date5.valueOf();
+console.assert( !equal( date5, numDate  ) );
+console.assert(  equal( date5, numDate  ) === equal.NOT_EQUAL );
+console.assert(  equal( date5, numDate, {nonStrict: true}  ) );
+console.assert(  equal( date5, numDate, {nonStrict: true}  ) === equal.VALUE );
+console.log( '-- Ok' );
+
+console.log( 'Number amd String wrappers should be compared when "nonStrict" option is true' );
+// jshint -W053
+var number10 = new Number( 99 );
+var number11 = 99;
+var string10 = new String( "99" );
+var string11 = "99";
+// jshint +W053
+console.assert( !equal( number10, string10 ) );
+console.assert(  equal( number10, string10 ) === equal.NOT_EQUAL );
+console.assert(  equal( number10, string10, {nonStrict: true} ) );
+console.assert(  equal( number10, string10, {nonStrict: true} ) === equal.VALUE );
+console.assert( !equal( number10, string11 ) );
+console.assert(  equal( number10, string11 ) === equal.NOT_EQUAL );
+console.assert(  equal( number10, string11, {nonStrict: true} ) );
+console.assert(  equal( number10, string11, {nonStrict: true} ) === equal.VALUE );
+console.log( '-- Ok' );
+
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {
     process.exit( 0 );
 }
