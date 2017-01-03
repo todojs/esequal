@@ -59,8 +59,8 @@
             return equal.NOT_EQUAL;
         }
         if (aType === 'object') {                           // Objects
-            aKeys = Object.keys(a).sort();                  // Get enumerate properties
-            bKeys = Object.keys(b).sort();
+            aKeys = getProperties(a, options);              // Get properties with options
+            bKeys = getProperties(b, options);
             if (aKeys.length !== bKeys.length) {            // Check number of properties
                 return equal.NOT_EQUAL;
             }
@@ -87,6 +87,31 @@
     equal.VALUE_AND_TYPE      = 2;
     equal.PROPERTIES          = 3;
     equal.PROPERTIES_AND_TYPE = 4;
+
+    // get object properties with different scope
+    function getProperties(obj, options) {
+        return (
+            options.allProperties  ?                            // All properties
+                (function getAllProp(obj) {
+                    var proto = Object.getPrototypeOf(obj);
+                    return (
+                        typeof proto === 'object' && proto !== null ?
+                            getAllProp(proto) :
+                            []
+                    ).concat( Object.getOwnPropertyNames(obj) );
+                })(obj) :
+                options.nonEnumerableProperties ?
+                    Object.getOwnPropertyNames(obj) :           // All own properties (enumerable and nonenumerable)
+                    Object.keys(obj)                            // All own enumerable properties
+        )
+            .sort()
+            .filter( function(prop, pos, arr) {
+                if (prop[0] === '_' && !options.privateProperties) {
+                    return false;                               // Filter private properties (_)
+                }                                               // Eliminate duplicates (for all properties)
+                return !options.allProperties || pos === 0 || arr[pos - 1] !== prop;
+            });
+    }
 
     // Export for node and browser
     if (typeof exports !== 'undefined') {

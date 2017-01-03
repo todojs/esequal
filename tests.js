@@ -439,6 +439,46 @@ console.assert( !equal( obj1, obj4 ) );
 console.assert(  equal( obj1, obj4 ) === equal.NOT_EQUAL );
 console.assert(  equal( obj1, obj5 ) );
 console.assert(  equal( obj1, obj5 ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( obj1, obj2, {privateProperties: true} ) );
+console.assert(  equal( obj1, obj2, {privateProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( obj1, obj3, {privateProperties: true} ) );
+console.assert(  equal( obj1, obj3, {privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( obj1, obj4, {privateProperties: true} ) );
+console.assert(  equal( obj1, obj4, {privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( obj1, obj5, {privateProperties: true} ) );
+console.assert(  equal( obj1, obj5, {privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( obj1, obj2, {nonEnumerableProperties: true} ) );
+console.assert(  equal( obj1, obj2, {nonEnumerableProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( obj1, obj3, {nonEnumerableProperties: true} ) );
+console.assert(  equal( obj1, obj3, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( obj1, obj4, {nonEnumerableProperties: true} ) );
+console.assert(  equal( obj1, obj4, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( obj1, obj5, {nonEnumerableProperties: true} ) );
+console.assert(  equal( obj1, obj5, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( obj1, obj2, {allProperties: true} ) );
+console.assert(  equal( obj1, obj2, {allProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( obj1, obj3, {allProperties: true} ) );
+console.assert(  equal( obj1, obj3, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( obj1, obj4, {allProperties: true} ) );
+console.assert(  equal( obj1, obj4, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( obj1, obj5, {allProperties: true} ) );
+console.assert(  equal( obj1, obj5, {allProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( obj1, obj2, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj2, {nonEnumerableProperties: true, privateProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( obj1, obj3, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj3, {nonEnumerableProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( obj1, obj4, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj4, {nonEnumerableProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( obj1, obj5, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj5, {nonEnumerableProperties: true, privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( obj1, obj2, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj2, {allProperties: true, privateProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( obj1, obj3, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj3, {allProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( obj1, obj4, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj4, {allProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( obj1, obj5, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( obj1, obj5, {allProperties: true, privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
 console.log( '-- Ok' );
 
 console.log( 'The object constructor should is revelant for the comparison' );
@@ -504,6 +544,46 @@ console.assert( !equal( multi1, multi4 ) );
 console.assert(  equal( multi1, multi4 ) === equal.NOT_EQUAL );
 console.assert(  equal( multi1, multi5 ) );
 console.assert(  equal( multi1, multi5 ) === equal.PROPERTIES_AND_TYPE);
+console.assert(  equal( array1, array2, {nonEnumerableProperties: true} ) );
+console.assert(  equal( array1, array2, {nonEnumerableProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( array1, array3, {nonEnumerableProperties: true} ) );
+console.assert(  equal( array1, array3, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( array1, array4, {nonEnumerableProperties: true} ) );
+console.assert(  equal( array1, array4, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( array1, array5, {nonEnumerableProperties: true} ) );
+console.assert(  equal( array1, array5, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( array1, array2, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array2, {nonEnumerableProperties: true, privateProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( array1, array3, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array3, {nonEnumerableProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( array1, array4, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array4, {nonEnumerableProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( array1, array5, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array5, {nonEnumerableProperties: true, privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( array1, array2, {allProperties: true} ) );
+console.assert(  equal( array1, array2, {allProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( array1, array3, {allProperties: true} ) );
+console.assert(  equal( array1, array3, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( array1, array4, {allProperties: true} ) );
+console.assert(  equal( array1, array4, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( array1, array5, {allProperties: true} ) );
+console.assert(  equal( array1, array5, {allProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( array1, array2, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array2, {allProperties: true, privateProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( array1, array3, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array3, {allProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( array1, array4, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array4, {allProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( array1, array5, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( array1, array5, {allProperties: true, privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( array1, array2, {privateProperties: true} ) );
+console.assert(  equal( array1, array2, {privateProperties: true} ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( array1, array3, {privateProperties: true} ) );
+console.assert(  equal( array1, array3, {privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( array1, array4, {privateProperties: true} ) );
+console.assert(  equal( array1, array4, {privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( array1, array5, {privateProperties: true} ) );
+console.assert(  equal( array1, array5, {privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
 console.log( '-- Ok' );
 
 console.log('Two arrays should be compared by its content and properties');
@@ -554,6 +634,193 @@ console.assert(  equal( array10, arrayLike1, {nonStrict: true} ) );
 console.assert(  equal( array10, arrayLike1, {nonStrict: true} ) === equal.PROPERTIES );
 console.assert( !equal( array10, arrayLike2, {nonStrict: true} ) );
 console.assert(  equal( array10, arrayLike2, {nonStrict: true} ) === equal.NOT_EQUAL );
+console.log( '-- Ok' );
+
+console.log( 'Objects from function constructor with private properties (obj._b)' );
+function Constructor1( a ) {
+    this.a = a;
+    this._b = a * 2;
+}
+function Constructor2( a ) {
+    this.a = a;
+    this._b = a * 2;
+}
+function Constructor3( a ) {
+    this.a = a;
+    this._b = a * 3;
+}
+var instance11  = new Constructor1( 1 );
+var instance11b = instance11;
+var instance11d = new Constructor1( 1 );
+var instance12  = new Constructor1( 2 );
+var instance21  = new Constructor2( 1 );
+var instance22  = new Constructor2( 2 );
+var instance31  = new Constructor3( 1 );
+var instance32  = new Constructor3( 2 );
+console.assert(  equal( instance11, instance11b ) );
+console.assert(  equal( instance11, instance11b ) === equal.VALUE_AND_TYPE );
+console.assert(  equal( instance11, instance11d ) );
+console.assert(  equal( instance11, instance11d ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( instance11, instance21 ) );
+console.assert(  equal( instance11, instance21 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance11, instance21, {nonStrict: true} ) );
+console.assert(  equal( instance11, instance21, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert(  equal( instance11, instance21, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance11, instance21, {nonStrict: true, privateProperties: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance11, instance31 ) );
+console.assert(  equal( instance11, instance31 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance11, instance31, {nonStrict: true} ) );
+console.assert(  equal( instance11, instance31, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance11, instance31, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance11, instance31, {nonStrict: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( instance11, instance12 ) );
+console.assert(  equal( instance11, instance12 ) === equal.NOT_EQUAL );
+console.assert( !equal( instance21, instance22 ) );
+console.assert(  equal( instance21, instance22 ) === equal.NOT_EQUAL );
+console.assert( !equal( instance12, instance22 ) );
+console.assert(  equal( instance12, instance22 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance12, instance22, {nonStrict: true} ) );
+console.assert(  equal( instance12, instance22, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert(  equal( instance12, instance22, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance12, instance22, {nonStrict: true, privateProperties: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance12, instance32 ) );
+console.assert(  equal( instance12, instance32 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance12, instance32, {nonStrict: true} ) );
+console.assert(  equal( instance12, instance32, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance12, instance32, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance12, instance32, {nonStrict: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.log( '-- Ok' );
+
+console.log( 'Object with enumerate and not enumerate properties' );
+var notEnumerable = {};
+Object.defineProperties( notEnumerable, {
+    "a": {value: 1, enumerable: false},
+    "b": {value: 2, enumerable: false},
+    "_d": {value: 3, enumerable: false}
+});
+var enumarableEmpty = {_d: 3};
+var enumerable      = {a: 1, b: 2, _d: 3};
+console.assert( !equal( notEnumerable, enumerable ) );
+console.assert(  equal( notEnumerable, enumerable ) === equal.NOT_EQUAL );
+console.assert(  equal( notEnumerable, enumarableEmpty ) );
+console.assert(  equal( notEnumerable, enumarableEmpty ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( enumerable, enumarableEmpty ) );
+console.assert(  equal( enumerable, enumarableEmpty ) === equal.NOT_EQUAL );
+console.assert(  equal( {}, enumarableEmpty ) );
+console.assert(  equal( {}, enumarableEmpty ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( notEnumerable, enumerable, {nonEnumerableProperties: true} ) );
+console.assert(  equal( notEnumerable, enumerable, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notEnumerable, enumarableEmpty, {nonEnumerableProperties: true} ) );
+console.assert(  equal( notEnumerable, enumarableEmpty, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( enumerable, enumarableEmpty, {nonEnumerableProperties: true} ) );
+console.assert(  equal( enumerable, enumarableEmpty, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( {}, enumarableEmpty, {nonEnumerableProperties: true} ) );
+console.assert(  equal( {}, enumarableEmpty, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( notEnumerable, enumerable, {privateProperties: true, nonEnumerableProperties: true} ) );
+console.assert(  equal( notEnumerable, enumerable, {privateProperties: true, nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notEnumerable, enumarableEmpty, {privateProperties: true, nonEnumerableProperties: true} ) );
+console.assert(  equal( notEnumerable, enumarableEmpty, {privateProperties: true, nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( enumerable, enumarableEmpty, {privateProperties: true, nonEnumerableProperties: true} ) );
+console.assert(  equal( enumerable, enumarableEmpty, {privateProperties: true, nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( {}, enumarableEmpty, {privateProperties: true, nonEnumerableProperties: true} ) );
+console.assert(  equal( {}, enumarableEmpty, {privateProperties: true, nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( notEnumerable, enumerable, {allProperties: true} ) );
+console.assert(  equal( notEnumerable, enumerable, {allProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notEnumerable, enumarableEmpty, {allProperties: true} ) );
+console.assert(  equal( notEnumerable, enumarableEmpty, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( enumerable, enumarableEmpty, {allProperties: true} ) );
+console.assert(  equal( enumerable, enumarableEmpty, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( {}, enumarableEmpty, {allProperties: true} ) );
+console.assert(  equal( {}, enumarableEmpty, {allProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( notEnumerable, enumerable, {privateProperties: true, allProperties: true} ) );
+console.assert(  equal( notEnumerable, enumerable, {privateProperties: true, allProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notEnumerable, enumarableEmpty, {privateProperties: true, allProperties: true} ) );
+console.assert(  equal( notEnumerable, enumarableEmpty, {privateProperties: true, allProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( enumerable, enumarableEmpty, {privateProperties: true, allProperties: true} ) );
+console.assert(  equal( enumerable, enumarableEmpty, {privateProperties: true, allProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( {}, enumarableEmpty, {privateProperties: true, allProperties: true} ) );
+console.assert(  equal( {}, enumarableEmpty, {privateProperties: true, allProperties: true} ) === equal.NOT_EQUAL );
+console.log( '-- Ok' );
+
+console.log( 'Object with enumerate and not enumerate properties' );
+let priv = new WeakMap();
+class Parent  {
+    constructor(x) {
+        this._x = x;
+        priv.set(this, {});
+    }
+    get a() {
+        return priv.get(this).a;
+    }
+    set a(value) {
+        let tmp = priv.get(this);
+        tmp.a = value;
+        priv.set(this, tmp);
+    }
+}
+class Child extends Parent {
+    constructor(x, y) {
+        super(x);
+        this.y = y;
+        priv.set(this, {});
+    }
+    get b() {
+        return priv.get(this).b;
+    }
+    set b(value) {
+        let tmp = priv.get(this);
+        tmp.b = value;
+        priv.set(this, tmp);
+    }
+}
+var c1 = new Child(10, 20);
+c1.a = 1;
+c1.b = 2;
+var c2 = new Child(10, 20);
+c2.a = 1;
+c2.b = 2;
+var c3 = new Child(-10, 20);
+c3.a = 0;
+c3.b = 2;
+var c4 = new Child(10, -20);
+c4.a = 1;
+c4.b = 0;
+console.assert(  equal( c1, c2 ) );
+console.assert(  equal( c1, c2 ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( c1, c2, {nonEnumerableProperties: true} ) );
+console.assert(  equal( c1, c2, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( c1, c2, {allProperties: true} ) );
+console.assert(  equal( c1, c2, {allProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( c1, c2, {privateProperties: true} ) );
+console.assert(  equal( c1, c2, {privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( c1, c2, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( c1, c2, {nonEnumerableProperties: true, privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( c1, c2, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( c1, c2, {allProperties: true, privateProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( c1, c3 ) );
+console.assert(  equal( c1, c3 ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( c1, c3, {nonEnumerableProperties: true} ) );
+console.assert(  equal( c1, c3, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( c1, c3, {allProperties: true} ) );
+console.assert(  equal( c1, c3, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c3, {privateProperties: true} ) );
+console.assert(  equal( c1, c3, {privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c3, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( c1, c3, {nonEnumerableProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c3, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( c1, c3, {allProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c4 ) );
+console.assert(  equal( c1, c4 ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c4, {nonEnumerableProperties: true} ) );
+console.assert(  equal( c1, c4, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c4, {allProperties: true} ) );
+console.assert(  equal( c1, c4, {allProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c4, {privateProperties: true} ) );
+console.assert(  equal( c1, c4, {privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c4, {nonEnumerableProperties: true, privateProperties: true} ) );
+console.assert(  equal( c1, c4, {nonEnumerableProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( c1, c4, {allProperties: true, privateProperties: true} ) );
+console.assert(  equal( c1, c4, {allProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
 console.log( '-- Ok' );
 
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {
