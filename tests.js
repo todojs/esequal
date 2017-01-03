@@ -9,7 +9,7 @@ console.log( 'must be a function' );
 console.assert( typeof equal === 'function' );
 console.assert( equal.length === 3 );
 console.assert( equal.name === 'equal' );
-console.log('--- Ok');
+console.log('-- Ok');
 
 console.log( 'should make strict comparison' );
 console.assert(  equal( "", "" ) );
@@ -307,6 +307,13 @@ console.assert( !equal( [[]], NaN, {nonStrict: true}  ) );
 console.assert( !equal( [0], [1], {nonStrict: true}  ) );
 console.assert( !equal( [0], NaN, {nonStrict: true}  ) );
 console.assert( !equal( [1], NaN, {nonStrict: true}  ) );
+console.log( '-- Ok' );
+
+console.log( 'NaN vs NaN should be true');
+console.assert(  equal( NaN, NaN ) );
+console.assert(  equal( NaN, NaN ) === equal.VALUE_AND_TYPE );
+console.assert(  equal( NaN, NaN, {nonStrict: true} ) );
+console.assert(  equal( NaN, NaN, {nonStrict: true} ) === equal.VALUE_AND_TYPE );
 console.log( '-- Ok' );
 
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {

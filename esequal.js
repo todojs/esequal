@@ -20,6 +20,12 @@
         {
             return equal.NOT_EQUAL;
         }
+        if (aType === 'number' &&               // Special case: Not is a Number (NaN !== NaN)
+            bType === 'number' &&
+            isNaN(a) &&
+            isNaN(b)) {
+            return equal.VALUE_AND_TYPE;
+        }
         return equal.NOT_EQUAL;                 // Not equal
     }
     equal.NOT_EQUAL           = 0;
