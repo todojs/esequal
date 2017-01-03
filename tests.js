@@ -316,6 +316,91 @@ console.assert(  equal( NaN, NaN, {nonStrict: true} ) );
 console.assert(  equal( NaN, NaN, {nonStrict: true} ) === equal.VALUE_AND_TYPE );
 console.log( '-- Ok' );
 
+console.log( 'Date should be compared by its internal number' );
+var date1   = new Date();
+var date2   = date1;
+var date3   = new Date( '2015-01-01' );
+var date4   = new Date( date1.getTime() );
+console.assert(  equal( date1, date2 ) );
+console.assert(  equal( date1, date2 ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( date1, date3 ) );
+console.assert(  equal( date1, date3 ) === equal.NOT_EQUAL );
+console.assert(  equal( date1, date4 ) );
+console.assert(  equal( date1, date4 ) === equal.VALUE_AND_TYPE );
+console.log( '-- Ok' );
+
+console.log( 'String wrapper should be compared as a string' );
+// jshint -W053
+var string1 = new String( 'hello' );
+var string2 = string1;
+var string3 = new String( 'other' );
+var string4 = new String( 'hello' );
+// jshint -W053
+var string5 = 'hello';
+var string6 = 'HELLO';
+var string7 = 'HELLO';
+console.assert(  equal( string1, string2 ) );
+console.assert(  equal( string1, string2 ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( string1, string3 ) );
+console.assert(  equal( string1, string3 ) === equal.NOT_EQUAL );
+console.assert(  equal( string1, string4 ) );
+console.assert(  equal( string1, string4 ) === equal.VALUE_AND_TYPE );
+console.assert(  equal( string1, string5 ) );
+console.assert(  equal( string1, string5 ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( string1, string6 ) );
+console.assert(  equal( string1, string6 ) === equal.NOT_EQUAL );
+console.assert(  equal( string6, string7 ) );
+console.assert(  equal( string6, string7 ) === equal.VALUE_AND_TYPE );
+console.log( '-- Ok' );
+
+console.log( 'Number wrapper should be compared as a number' );
+// jshint -W053
+var number1 = new Number( 10.10 );
+var number2 = number1;
+var number3 = new Number( 20.20 );
+var number4 = new Number( 10.10 );
+// jshint +W053
+var number5 = 10.10;
+var number6 = 10;
+var number7 = 10;
+console.assert(  equal( number1, number2 ) );
+console.assert(  equal( number1, number2 ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( number1, number3 ) );
+console.assert(  equal( number1, number3 ) === equal.NOT_EQUAL );
+console.assert(  equal( number1, number4 ) );
+console.assert(  equal( number1, number4 ) === equal.VALUE_AND_TYPE );
+console.assert(  equal( number1, number5 ) );
+console.assert(  equal( number1, number5 ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( number1, number6 ) );
+console.assert(  equal( number1, number6 ) === equal.NOT_EQUAL );
+console.assert(  equal( number6, number7 ) );
+console.assert(  equal( number6, number7 ) === equal.VALUE_AND_TYPE );
+console.log( '-- Ok' );
+
+console.log( 'Boolean wrapper should be compared as a boolean' );
+// jshint -W053
+var boolean1 = new Boolean( false );
+var boolean2 = boolean1;
+var boolean3 = new Boolean( true );
+var boolean4 = new Boolean( false );
+// jshint +W053
+var boolean5 = false;
+var boolean6 = true;
+var boolean7 = true;
+console.assert(  equal( boolean1, boolean2 ) );
+console.assert(  equal( boolean1, boolean2 ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( boolean1, boolean3 ) );
+console.assert(  equal( boolean1, boolean3 ) === equal.NOT_EQUAL );
+console.assert(  equal( boolean1, boolean4 ) );
+console.assert(  equal( boolean1, boolean4 ) === equal.VALUE_AND_TYPE );
+console.assert(  equal( boolean1, boolean5 ) );
+console.assert(  equal( boolean1, boolean5 ) === equal.VALUE_AND_TYPE );
+console.assert( !equal( boolean1, boolean6 ) );
+console.assert(  equal( boolean1, boolean6 ) === equal.NOT_EQUAL );
+console.assert(  equal( boolean6, boolean7 ) );
+console.assert(  equal( boolean6, boolean7 ) === equal.VALUE_AND_TYPE );
+console.log( '-- Ok' );
+
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {
     process.exit( 0 );
 }
