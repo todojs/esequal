@@ -2,6 +2,19 @@
 (function (root) {
     "use strict";
 
+    /* jshint -W089 */
+    function getEnumerableProperties(obj, privateProperties) {
+        var result = [];
+        for (var prop in obj) {
+            if (!privateProperties && prop[0] === '_') {
+                continue;
+            }
+            result.push(prop);
+        }
+        return result.sort();
+    }
+    /* jshint +W089 */
+
     function equal(a, b, options) {
         var aValue, bValue, aKeys, bKeys, i,                // Define variables
             aType = typeof a,                               // Get value types
@@ -59,8 +72,9 @@
             return equal.NOT_EQUAL;
         }
         if (aType === 'object') {                           // Objects
-            aKeys = Object.keys(a).sort();                  // Get enumerate properties
-            bKeys = Object.keys(b).sort();
+            // Get enumerable properties
+            aKeys = getEnumerableProperties(a, options.privateProperties);
+            bKeys = getEnumerableProperties(b, options.privateProperties);
             if (aKeys.length !== bKeys.length) {            // Check number of properties
                 return equal.NOT_EQUAL;
             }

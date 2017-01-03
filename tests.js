@@ -556,6 +556,61 @@ console.assert( !equal( array10, arrayLike2, {nonStrict: true} ) );
 console.assert(  equal( array10, arrayLike2, {nonStrict: true} ) === equal.NOT_EQUAL );
 console.log( '-- Ok' );
 
+console.log( 'Objects from function constructor with private properties (obj._b)' );
+function Constructor1( a ) {
+    this.a = a;
+    this._b = a * 2;
+}
+function Constructor2( a ) {
+    this.a = a;
+    this._b = a * 2;
+}
+function Constructor3( a ) {
+    this.a = a;
+    this._b = a * 3;
+}
+var instance11  = new Constructor1( 1 );
+var instance11b = instance11;
+var instance11d = new Constructor1( 1 );
+var instance12  = new Constructor1( 2 );
+var instance21  = new Constructor2( 1 );
+var instance22  = new Constructor2( 2 );
+var instance31  = new Constructor3( 1 );
+var instance32  = new Constructor3( 2 );
+console.assert(  equal( instance11, instance11b ) );
+console.assert(  equal( instance11, instance11b ) === equal.VALUE_AND_TYPE );
+console.assert(  equal( instance11, instance11d ) );
+console.assert(  equal( instance11, instance11d ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( instance11, instance21 ) );
+console.assert(  equal( instance11, instance21 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance11, instance21, {nonStrict: true} ) );
+console.assert(  equal( instance11, instance21, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert(  equal( instance11, instance21, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance11, instance21, {nonStrict: true, privateProperties: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance11, instance31 ) );
+console.assert(  equal( instance11, instance31 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance11, instance31, {nonStrict: true} ) );
+console.assert(  equal( instance11, instance31, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance11, instance31, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance11, instance31, {nonStrict: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( instance11, instance12 ) );
+console.assert(  equal( instance11, instance12 ) === equal.NOT_EQUAL );
+console.assert( !equal( instance21, instance22 ) );
+console.assert(  equal( instance21, instance22 ) === equal.NOT_EQUAL );
+console.assert( !equal( instance12, instance22 ) );
+console.assert(  equal( instance12, instance22 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance12, instance22, {nonStrict: true} ) );
+console.assert(  equal( instance12, instance22, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert(  equal( instance12, instance22, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance12, instance22, {nonStrict: true, privateProperties: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance12, instance32 ) );
+console.assert(  equal( instance12, instance32 ) === equal.NOT_EQUAL );
+console.assert(  equal( instance12, instance32, {nonStrict: true} ) );
+console.assert(  equal( instance12, instance32, {nonStrict: true} ) === equal.PROPERTIES );
+console.assert( !equal( instance12, instance32, {nonStrict: true, privateProperties: true} ) );
+console.assert(  equal( instance12, instance32, {nonStrict: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.log( '-- Ok' );
+
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {
     process.exit( 0 );
 }
