@@ -3,7 +3,7 @@
     "use strict";
 
     function equal(a, b, options) {
-        var aValue, bValue,                                 // Define variables
+        var aValue, bValue, aKeys, bKeys, i,                // Define variables
             aType = typeof a,                               // Get value types
             bType = typeof b;
         options = options || {};                            // Optional parameter
@@ -55,12 +55,38 @@
                 return equal.NOT_EQUAL;                     // Not equal
             }
         }
+        if (aType !== bType) {                              // Different type is a not equal value from this point
+            return equal.NOT_EQUAL;
+        }
+        if (aType === 'object') {                           // Objects
+            aKeys = Object.keys(a).sort();                  // Get enumerate properties
+            bKeys = Object.keys(b).sort();
+            if (aKeys.length !== bKeys.length) {            // Check number of properties
+                return equal.NOT_EQUAL;
+            }
+            if (aKeys.join('') !== bKeys.join('')) {        // Check name of properties
+                return equal.NOT_EQUAL;
+            }
+            for (i = 0; i < aKeys.length; i++) {            // Check each property value (recursive call)
+                if (!equal(a[aKeys[i]], b[bKeys[i]], options)) {
+                    return equal.NOT_EQUAL;
+                }
+            }
+            if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
+                return equal.PROPERTIES_AND_TYPE;
+            }
+            if (options.nonStrict) {                        // Non strict comparison (optional)
+                return equal.PROPERTIES;
+            }
+            return equal.NOT_EQUAL;                         // Not equal
+        }
         return equal.NOT_EQUAL;                             // Not equal
     }
     equal.NOT_EQUAL           = 0;
     equal.VALUE               = 1;
     equal.VALUE_AND_TYPE      = 2;
-
+    equal.PROPERTIES          = 3;
+    equal.PROPERTIES_AND_TYPE = 4;
 
     // Export for node and browser
     if (typeof exports !== 'undefined') {
