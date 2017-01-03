@@ -1,0 +1,2 @@
+# esequal
+EcmaScript Equal function
