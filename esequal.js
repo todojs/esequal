@@ -2,6 +2,9 @@
 (function (root) {
     "use strict";
 
+    var MAP_SUPPORT         = typeof Map !== 'undefined';
+    var SET_SUPPORT         = typeof Set !== 'undefined';
+
     function equal(a, b, options) {
         var aStack = [];
         var bStack = [];
@@ -98,6 +101,22 @@
                     ( a instanceof Error && b instanceof Error  ))
                 {
                     if (a.toString() !== b.toString()) {
+                        return equal.NOT_EQUAL;
+                    }
+                } else
+                    if ((MAP_SUPPORT &&                                 // Map
+                         a instanceof Map && a.entries &&
+                         b instanceof Map &&  b.entries) ||
+                        (SET_SUPPORT &&                                 // Set
+                         a instanceof Set && a.entries &&
+                         b instanceof Set && b.entries))
+                {
+                    if (a.size !== b.size) {                            // Check size
+                        return equal.NOT_EQUAL;
+                    }
+                    if ( check( Array.from( a.entries() ), Array.from( b.entries() ) ) ) {  // Recursive call as Array
+                        return equal.VALUE_AND_TYPE;
+                    } else {
                         return equal.NOT_EQUAL;
                     }
                 }
