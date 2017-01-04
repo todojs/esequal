@@ -3,95 +3,107 @@
     "use strict";
 
     function equal(a, b, options) {
-        var aValue, bValue, aKeys, bKeys, i,                // Define variables
-            aDescriptor, bDescriptor,
-            aType = typeof a,                               // Get value types
-            bType = typeof b;
-        options = options || {};                            // Optional parameter
-        if (a === b) {                                      // Strict comparison
-            return equal.VALUE_AND_TYPE;                    // Equal value and type
-        }
-        /* jshint -W116 */
-        if (options.nonStrict && a == b) {                  // Non strict comparison (optional)
-            return equal.VALUE;                             // Equal value (different type)
-        }
-        /* jshint +W116 */
-        if (aType === 'undefined' ||                        // undefined and null are always different than other values
-            bType === 'undefined' ||
-            a === null ||
-            b === null)
-        {
-            return equal.NOT_EQUAL;
-        }
-        if (aType === 'number' &&                           // Special case: Not is a Number (NaN !== NaN)
-            bType === 'number' &&
-            isNaN(a) &&
-            isNaN(b))
-        {
-            return equal.VALUE_AND_TYPE;
-        }
-        if (typeof a.valueOf === 'function' &&              // valueOf() is a function in both values
-            typeof b.valueOf === 'function')
-        {
-            aValue = a.valueOf();                           // Get valueOf()
-            bValue = b.valueOf();
-            if (aValue !== a || bValue !== b) {             // The valueOf's return is different that the base value
-                if (aValue === bValue) {                    // The valueOf's return is the same for both values
-                    if (a.constructor === b.constructor) {  // It's the same constructor and as result is the same type
-                        return equal.VALUE_AND_TYPE;
-                    } else {
-                        if (options.nonStrict) {            // Non strict comparison (optional)
-                            return equal.VALUE;             // Equal value (different type)
+        var aStack = [];
+        var bStack = [];
+        options = options || {};
+        return (function check(a, b) {
+            var aValue, bValue, aKeys, bKeys, i,                // Define variables
+                aDescriptor, bDescriptor,
+                aType = typeof a,                               // Get value types
+                bType = typeof b;
+            options = options || {};                            // Optional parameter
+            if (a === b) {                                      // Strict comparison
+                return equal.VALUE_AND_TYPE;                    // Equal value and type
+            }
+            /* jshint -W116 */
+            if (options.nonStrict && a == b) {                  // Non strict comparison (optional)
+                return equal.VALUE;                             // Equal value (different type)
+            }
+            /* jshint +W116 */
+            if (aType === 'undefined' ||                        // undefined and null are always different than other values
+                bType === 'undefined' ||
+                a === null ||
+                b === null)
+            {
+                return equal.NOT_EQUAL;
+            }
+            if (aType === 'number' &&                           // Special case: Not is a Number (NaN !== NaN)
+                bType === 'number' &&
+                isNaN(a) &&
+                isNaN(b))
+            {
+                return equal.VALUE_AND_TYPE;
+            }
+            if (typeof a.valueOf === 'function' &&              // valueOf() is a function in both values
+                typeof b.valueOf === 'function')
+            {
+                aValue = a.valueOf();                           // Get valueOf()
+                bValue = b.valueOf();
+                if (aValue !== a || bValue !== b) {             // The valueOf's return is different that the base value
+                    if (aValue === bValue) {                    // The valueOf's return is the same for both values
+                        if (a.constructor === b.constructor) {  // It's the same constructor and as result is the same type
+                            return equal.VALUE_AND_TYPE;
+                        } else {
+                            if (options.nonStrict) {            // Non strict comparison (optional)
+                                return equal.VALUE;             // Equal value (different type)
+                            }
+                            return equal.NOT_EQUAL;             // Strict comparison
                         }
-                        return equal.NOT_EQUAL;             // Strict comparison
                     }
+                    /* jshint -W116 */
+                    if (options.nonStrict &&                    // Non strict comparison (optional)
+                        aValue == bValue)
+                    {
+                        return equal.VALUE;                     // Equal value (different type)
+                    }
+                    /* jshint +W116 */
+                    return equal.NOT_EQUAL;                     // Not equal
                 }
-                /* jshint -W116 */
-                if (options.nonStrict &&                    // Non strict comparison (optional)
-                    aValue == bValue)
+            }
+            if (aType !== bType) {                              // Different type is a not equal value from this point
+                return equal.NOT_EQUAL;
+            }
+            if (aType === 'object') {                           // Objects
+                if (aStack.indexOf(a) > -1 &&                   // Check if the object has been previously processed
+                    bStack.indexOf(b) > -1)
                 {
-                    return equal.VALUE;                     // Equal value (different type)
+                    return equal.VALUE_AND_TYPE;
                 }
-                /* jshint +W116 */
-                return equal.NOT_EQUAL;                     // Not equal
-            }
-        }
-        if (aType !== bType) {                              // Different type is a not equal value from this point
-            return equal.NOT_EQUAL;
-        }
-        if (aType === 'object') {                           // Objects
-            aKeys = getProperties(a, options);              // Get properties with options
-            bKeys = getProperties(b, options);
-            if (aKeys.length !== bKeys.length) {            // Check number of properties
-                return equal.NOT_EQUAL;
-            }
-            if (aKeys.join('') !== bKeys.join('')) {        // Check name of properties
-                return equal.NOT_EQUAL;
-            }
-            for (i = 0; i < aKeys.length; i++) {            // Check each property value (recursive call)
-                if (!equal(a[aKeys[i]], b[bKeys[i]], options)) {
+                aStack.push(a);                                 // Storage objects into stacks for recursive reference
+                bStack.push(b);
+                aKeys = getProperties(a, options);              // Get properties with options
+                bKeys = getProperties(b, options);
+                if (aKeys.length !== bKeys.length) {            // Check number of properties
                     return equal.NOT_EQUAL;
                 }
-                if (options.checkPropertyDescritors) {      // Check property descriptor (optional)
-                    aDescriptor = Object.getOwnPropertyDescriptor(a, aKeys[i]);
-                    bDescriptor = Object.getOwnPropertyDescriptor(b, bKeys[i]);
-                    if (aDescriptor.enumerable   !== bDescriptor.enumerable ||
-                        aDescriptor.writable     !== bDescriptor.writable   ||
-                        aDescriptor.configurable !== bDescriptor.configurable )
-                    {
+                if (aKeys.join('') !== bKeys.join('')) {        // Check name of properties
+                    return equal.NOT_EQUAL;
+                }
+                for (i = 0; i < aKeys.length; i++) {            // Check each property value (recursive call)
+                    if (!check(a[aKeys[i]], b[bKeys[i]])) {
                         return equal.NOT_EQUAL;
                     }
+                    if (options.checkPropertyDescritors) {      // Check property descriptor (optional)
+                        aDescriptor = Object.getOwnPropertyDescriptor(a, aKeys[i]);
+                        bDescriptor = Object.getOwnPropertyDescriptor(b, bKeys[i]);
+                        if (aDescriptor.enumerable   !== bDescriptor.enumerable ||
+                            aDescriptor.writable     !== bDescriptor.writable   ||
+                            aDescriptor.configurable !== bDescriptor.configurable )
+                        {
+                            return equal.NOT_EQUAL;
+                        }
+                    }
                 }
+                if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
+                    return equal.PROPERTIES_AND_TYPE;
+                }
+                if (options.nonStrict) {                        // Non strict comparison (optional)
+                    return equal.PROPERTIES;
+                }
+                return equal.NOT_EQUAL;                         // Not equal
             }
-            if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
-                return equal.PROPERTIES_AND_TYPE;
-            }
-            if (options.nonStrict) {                        // Non strict comparison (optional)
-                return equal.PROPERTIES;
-            }
-            return equal.NOT_EQUAL;                         // Not equal
-        }
-        return equal.NOT_EQUAL;                             // Not equal
+            return equal.NOT_EQUAL;                             // Not equal
+        })(a, b);
     }
     equal.NOT_EQUAL           = 0;
     equal.VALUE               = 1;

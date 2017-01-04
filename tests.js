@@ -864,6 +864,61 @@ console.assert( !equal( notConfigurable, configurable, {allPublicProperties: tru
 console.assert(  equal( notConfigurable, configurable, {allPublicProperties: true, checkPropertyDescritors: true} ) === equal.NOT_EQUAL);
 console.log( '-- Ok' );
 
+console.log( 'Object with self reference (circular reference)' );
+var circular1 = {
+    a: [1,2,3],
+    b: new Date(2016, 11, 24),
+    c: "Hello",
+    d: {
+        a: [1,2,3]
+    }
+};
+circular1.e   = circular1;
+var circular2 = circular1;
+var circular3 = {
+    a: [1,2,3],
+    b: new Date(2016, 11, 24),
+    c: "Hello",
+    d: {
+        a: [1,2,3]
+    }
+};
+circular3.e   = circular3;
+var circular4 = {
+    a: [1,2,3],
+    b: new Date(2016, 11, 24),
+    c: "Hello",
+    d: {
+        a: [1,2,3]
+    },
+    e: {}
+};
+console.assert(  equal( circular1, circular2 ) );
+console.assert(  equal( circular1, circular2 ) === equal.VALUE_AND_TYPE );
+console.assert(  equal( circular1, circular3 ) );
+console.assert(  equal( circular1, circular3 ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( circular1, circular4 ) );
+console.assert(  equal( circular1, circular4 ) === equal.NOT_EQUAL );
+var ref1 = {
+    a: 1
+};
+var ref2 = {
+    a: 1
+};
+var ref3 = {
+    a: 1
+}
+ref1.parent = ref3;
+ref2.parent = ref1;
+ref3.parent = ref2;
+ref1.child = ref2;
+ref2.child = ref3;
+ref3.child = ref1;
+console.assert(  equal( ref1, ref2 ) );
+console.assert(  equal( ref1, ref2 ) === equal.PROPERTIES_AND_TYPE );
+console.log( '--- Ok' );
+
+
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {
     process.exit( 0 );
 }
