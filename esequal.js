@@ -4,6 +4,8 @@
 
     var MAP_SUPPORT         = typeof Map !== 'undefined';
     var SET_SUPPORT         = typeof Set !== 'undefined';
+    var ARRAYBUFFER_SUPPORT = typeof ArrayBuffer !== 'undefined';
+    var DATAVIEW_SUPPORT    = typeof DataView !== 'undefined';
 
     function equal(a, b, options) {
         var aStack = [];
@@ -16,7 +18,14 @@
                 bType = typeof b;
             options = options || {};                            // Optional parameter
             if (a === b) {                                      // Strict comparison
-                return equal.VALUE_AND_TYPE;                    // Equal value and type
+                if ((aType === 'object' &&
+                     a !== null) ||
+                    aType === 'function')
+                {
+                    return equal.OBJECT;                        // Equal object
+                } else {
+                    return equal.VALUE_AND_TYPE;                // Equal value and type
+                }
             }
             /* jshint -W116 */
             if (options.nonStrict && a == b) {                  // Non strict comparison (optional)
@@ -70,7 +79,7 @@
                 if (aStack.indexOf(a) > -1 &&                   // Check if the object has been previously processed
                     bStack.indexOf(b) > -1)
                 {
-                    return equal.VALUE_AND_TYPE;
+                    return equal.OBJECT;
                 }
                 aStack.push(a);                                 // Storage objects into stacks for recursive reference
                 bStack.push(b);
@@ -119,7 +128,22 @@
                     } else {
                         return equal.NOT_EQUAL;
                     }
-                }
+                } else
+                    if (ARRAYBUFFER_SUPPORT && DATAVIEW_SUPPORT &&      // ArrayBuffer
+                        a instanceof ArrayBuffer && b instanceof ArrayBuffer)
+                    {
+                        aValue = new DataView(a);                       // Get DataView
+                        bValue = new DataView(b);
+                        if (aValue.byteLength !== bValue.byteLength) {  // Check size
+                            return equal.NOT_EQUAL;
+                        }
+                        i = bValue.byteLength;                          // Check content
+                        while (i--) {
+                            if (aValue.getInt8(i) !== bValue.getInt8(i)) {  // nonStrict comparison is not supported
+                                return equal.NOT_EQUAL;
+                            }
+                        }
+                    }
                 if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
                     return equal.PROPERTIES_AND_TYPE;
                 }
@@ -136,6 +160,7 @@
     equal.VALUE_AND_TYPE      = 2;
     equal.PROPERTIES          = 3;
     equal.PROPERTIES_AND_TYPE = 4;
+    equal.OBJECT              = 5;
 
     // get object properties with different scope
     function getProperties(obj, options) {
