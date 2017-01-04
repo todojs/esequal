@@ -1099,6 +1099,152 @@ if (typeof ArrayBuffer !== 'undefined' ) {
     console.assert(  equal( view1, view3 ) === equal.PROPERTIES_AND_TYPE );
     console.log('-- Ok');
 }
+if (typeof Uint8Array != 'undefined') {
+    console.log('Compare Typed Array');
+    var typedArray1 = new Uint8Array([0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    var typedArray2 = typedArray1;
+    var typedArray3 = new Uint8Array([0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 10]);
+    var typedArray4 = new Uint8Array([0, 1, 3, 4, 5, 6, 7, 8, 9, 10]);
+    var typedArray5 = new Uint8Array([0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    console.assert(equal(typedArray1, typedArray2));
+    console.assert(equal(typedArray1, typedArray2) === equal.OBJECT);
+    console.assert(!equal(typedArray1, typedArray3));
+    console.assert(equal(typedArray1, typedArray3) === equal.NOT_EQUAL);
+    console.assert(!equal(typedArray1, typedArray4));
+    console.assert(equal(typedArray1, typedArray4) === equal.NOT_EQUAL);
+    console.assert(equal(typedArray1, typedArray5));
+    console.assert(equal(typedArray1, typedArray5) === equal.PROPERTIES_AND_TYPE);
+    console.assert(equal(typedArray1, typedArray2, {nonEnumerableProperties: true}));
+    console.assert(equal(typedArray1, typedArray2, {nonEnumerableProperties: true}) === equal.OBJECT);
+    console.assert(!equal(typedArray1, typedArray3, {nonEnumerableProperties: true}));
+    console.assert(equal(typedArray1, typedArray3, {nonEnumerableProperties: true}) === equal.NOT_EQUAL);
+    console.assert(!equal(typedArray1, typedArray4, {nonEnumerableProperties: true}));
+    console.assert(equal(typedArray1, typedArray4, {nonEnumerableProperties: true}) === equal.NOT_EQUAL);
+    console.assert(equal(typedArray1, typedArray5, {nonEnumerableProperties: true}));
+    console.assert(equal(typedArray1, typedArray5, {nonEnumerableProperties: true}) === equal.PROPERTIES_AND_TYPE);
+    console.assert(equal(typedArray1, typedArray2, {allProperties: true}));
+    console.assert(equal(typedArray1, typedArray2, {allProperties: true}) === equal.OBJECT);
+    console.assert(!equal(typedArray1, typedArray3, {allProperties: true}));
+    console.assert(equal(typedArray1, typedArray3, {allProperties: true}) === equal.NOT_EQUAL);
+    console.assert(!equal(typedArray1, typedArray4, {allProperties: true}));
+    console.assert(equal(typedArray1, typedArray4, {allProperties: true}) === equal.NOT_EQUAL);
+    console.assert(equal(typedArray1, typedArray5, {allProperties: true}));
+    console.assert(equal(typedArray1, typedArray5, {allProperties: true}) === equal.PROPERTIES_AND_TYPE);
+    console.log('-- Ok');
+}
+
+console.log( 'Compare functions' );
+var func1 = function func( a ) { return true; };
+var func2 = func1;
+var func3 = function func( a ) {
+    return false;
+};
+var func4 = function func( a ) {
+    return true;
+};
+var func5 = new Function( 'a', 'return true;' );
+var func6 = function func( a ) { return true; };
+
+console.assert( !equal(Number.isNaN, String.prototype.indexOf ) );
+console.assert( !equal(Number.isNaN, String.prototype.indexOf, {functionSource: true } ) );
+console.assert( !equal(Number.prototype.valueOf, String.prototype.valueOf ) );
+console.assert(  equal(Number.prototype.valueOf, String.prototype.valueOf, {functionSource: true } ) );
+console.assert(  equal(Number.prototype.valueOf, String.prototype.valueOf, {functionSource: true } ) === equal.FUNCTION );
+console.assert( !equal( ( 100  ).toString, true.toString ) );
+console.assert(  equal( ( 100  ).toString, true.toString ) === equal.NOT_EQUAL );
+console.assert(  equal( ( 100  ).toString, true.toString, {functionSource: true} ) );
+console.assert(  equal( ( 100  ).toString, true.toString, {functionSource: true} ) === equal.FUNCTION );
+
+
+console.assert(  equal( func1, func2 ) );
+console.assert(  equal( func1, func2 ) === equal.FUNCTION );
+console.assert( !equal( func1, func3 ) );
+console.assert(  equal( func1, func3 ) === equal.NOT_EQUAL );
+
+console.assert(  equal( func1, func2, {functionSource: true} ) );
+console.assert(  equal( func1, func2, {functionSource: true} ) === equal.FUNCTION );
+console.assert( !equal( func1, func3, {functionSource: true} ) );
+console.assert(  equal( func1, func3, {functionSource: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( func1, func4, {functionSource: true} ) );
+console.assert(  equal( func1, func4, {functionSource: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( func1, func5, {functionSource: true} ) );
+console.assert(  equal( func1, func5, {functionSource: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( func1, func6, {functionSource: true} ) );
+console.assert(  equal( func1, func6, {functionSource: true} ) === equal.FUNCTION );
+console.log( '-- Ok' );
+
+console.log( 'Compare Arrow function' );
+var arrow1 = ( a ) => true;
+var arrow2 = arrow1;
+var arrow3 = ( a ) => false;
+var arrow4 = function func( a ) {
+    return true;
+};
+var arrow5 = new Function( 'a', 'return true;' );
+var arrow6 = function func( a ) {
+    return true;
+};
+
+console.assert(  equal( arrow1, arrow2 ) );
+console.assert(  equal( arrow1, arrow2 ) === equal.FUNCTION );
+console.assert( !equal( arrow1, arrow3 ) );
+console.assert( !equal( arrow1, arrow4 ) );
+console.assert( !equal( arrow1, arrow5 ) );
+console.assert( !equal( arrow1, arrow6 ) );
+
+console.assert(  equal( arrow1, arrow2, {functionSource: true} ) );
+console.assert(  equal( arrow1, arrow2, {functionSource: true} ) === equal.FUNCTION );
+console.assert( !equal( arrow1, arrow3, {functionSource: true} ) );
+console.assert(  equal( arrow1, arrow3, {functionSource: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( arrow1, arrow4, {functionSource: true} ) );
+console.assert(  equal( arrow1, arrow4, {functionSource: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( arrow1, arrow5, {functionSource: true} ) );
+console.assert(  equal( arrow1, arrow5, {functionSource: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( arrow1, arrow6, {functionSource: true} ) );
+console.assert(  equal( arrow1, arrow6, {functionSource: true} ) === equal.NOT_EQUAL );
+console.log( '-- Ok' );
+
+console.log('Static Class');
+var Static1 = class Static {
+    static sum( a, b ) {
+        return a + b;
+    }
+    static get c() {
+        return 100;
+    }
+};
+var Static2 = Static1;
+class Static3 {
+    static sum(a, b) {
+        return a + b;
+    }
+    static get c() {
+        return 100;
+    }
+}
+var Static4 = class Static {
+    static sum( a, b ) {
+        return a + b;
+    }
+    static get c() {
+        return 100;
+    }
+};
+console.assert(  equal( Static1, Static2 ));
+console.assert(  equal( Static1, Static2 ) === equal.FUNCTION);
+console.assert(  equal( Static1, Static2, {allProperties: true}));
+console.assert(  equal( Static1, Static2, {allProperties: true}) === equal.FUNCTION);
+console.assert( !equal( Static1, Static3 ));
+console.assert(  equal( Static1, Static3 ) === equal.NOT_EQUAL);
+console.assert( !equal( Static1, Static3, {functionSource: true}));
+console.assert(  equal( Static1, Static3, {functionSource: true}) === equal.NOT_EQUAL);
+console.assert( !equal( Static1, Static4 ));
+console.assert(  equal( Static1, Static4 ) === equal.NOT_EQUAL);
+console.assert(  equal( Static1, Static4, {functionSource: true}));
+console.assert(  equal( Static1, Static4, {functionSource: true}) === equal.FUNCTION);
+console.assert( !equal( Static1, Static4, {allProperties: true, functionSource: true}));    // TODO: check
+console.assert(  equal( Static1, Static4, {allProperties: true, functionSource: true}) === equal.NOT_EQUAL);
+console.log('-- Ok');
 
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {
     process.exit( 0 );

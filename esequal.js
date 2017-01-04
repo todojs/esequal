@@ -8,21 +8,19 @@
     var DATAVIEW_SUPPORT    = typeof DataView !== 'undefined';
 
     function equal(a, b, options) {
-        var aStack = [];
+        var aStack = [];                                        // Stack array
         var bStack = [];
-        options = options || {};
+        options = options || {};                                // Optional parameter
         return (function check(a, b) {
             var aValue, bValue, aKeys, bKeys, i,                // Define variables
                 aDescriptor, bDescriptor,
                 aType = typeof a,                               // Get value types
                 bType = typeof b;
-            options = options || {};                            // Optional parameter
             if (a === b) {                                      // Strict comparison
-                if ((aType === 'object' &&
-                     a !== null) ||
-                    aType === 'function')
-                {
+                if (aType === 'object' && a !== null) {
                     return equal.OBJECT;                        // Equal object
+                } else if (aType === 'function') {
+                    return equal.FUNCTION;                      // Equal function
                 } else {
                     return equal.VALUE_AND_TYPE;                // Equal value and type
                 }
@@ -75,7 +73,9 @@
             if (aType !== bType) {                              // Different type is a not equal value from this point
                 return equal.NOT_EQUAL;
             }
-            if (aType === 'object') {                           // Objects
+            if (a instanceof Object &&                          // Objects
+                b instanceof Object)
+            {
                 if (aStack.indexOf(a) > -1 &&                   // Check if the object has been previously processed
                     bStack.indexOf(b) > -1)
                 {
@@ -112,13 +112,12 @@
                     if (a.toString() !== b.toString()) {
                         return equal.NOT_EQUAL;
                     }
-                } else
-                    if ((MAP_SUPPORT &&                                 // Map
-                         a instanceof Map && a.entries &&
-                         b instanceof Map &&  b.entries) ||
-                        (SET_SUPPORT &&                                 // Set
-                         a instanceof Set && a.entries &&
-                         b instanceof Set && b.entries))
+                } else if ((MAP_SUPPORT &&                                 // Map
+                            a instanceof Map && a.entries &&
+                            b instanceof Map &&  b.entries) ||
+                           (SET_SUPPORT &&                                 // Set
+                            a instanceof Set && a.entries &&
+                            b instanceof Set && b.entries))
                 {
                     if (a.size !== b.size) {                            // Check size
                         return equal.NOT_EQUAL;
@@ -128,29 +127,32 @@
                     } else {
                         return equal.NOT_EQUAL;
                     }
-                } else
-                    if (ARRAYBUFFER_SUPPORT && DATAVIEW_SUPPORT &&      // ArrayBuffer
-                        a instanceof ArrayBuffer && b instanceof ArrayBuffer)
-                    {
-                        aValue = new DataView(a);                       // Get DataView
-                        bValue = new DataView(b);
-                        if (aValue.byteLength !== bValue.byteLength) {  // Check size
+                } else if (ARRAYBUFFER_SUPPORT && DATAVIEW_SUPPORT &&      // ArrayBuffer
+                           a instanceof ArrayBuffer && b instanceof ArrayBuffer)
+                {
+                    aValue = new DataView(a);                       // Get DataView
+                    bValue = new DataView(b);
+                    if (aValue.byteLength !== bValue.byteLength) {  // Check size
+                        return equal.NOT_EQUAL;
+                    }
+                    i = bValue.byteLength;                          // Check content
+                    while (i--) {
+                        if (aValue.getInt8(i) !== bValue.getInt8(i)) {  // nonStrict comparison is not supported
                             return equal.NOT_EQUAL;
                         }
-                        i = bValue.byteLength;                          // Check content
-                        while (i--) {
-                            if (aValue.getInt8(i) !== bValue.getInt8(i)) {  // nonStrict comparison is not supported
-                                return equal.NOT_EQUAL;
-                            }
-                        }
                     }
+                } else if ((aType === 'function')) {                // Function type
+                    if (options.functionSource && a.toString() === b.toString()) {
+                        return equal.FUNCTION;
+                    }
+                    return equal.NOT_EQUAL;
+                }
                 if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
                     return equal.PROPERTIES_AND_TYPE;
                 }
                 if (options.nonStrict) {                        // Non strict comparison (optional)
                     return equal.PROPERTIES;
                 }
-                return equal.NOT_EQUAL;                         // Not equal
             }
             return equal.NOT_EQUAL;                             // Not equal
         })(a, b);
@@ -161,6 +163,7 @@
     equal.PROPERTIES          = 3;
     equal.PROPERTIES_AND_TYPE = 4;
     equal.OBJECT              = 5;
+    equal.FUNCTION            = 6;
 
     // get object properties with different scope
     function getProperties(obj, options) {
