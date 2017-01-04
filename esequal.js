@@ -94,6 +94,13 @@
                         }
                     }
                 }
+                if (( a instanceof RegExp && b instanceof RegExp ) ||   // RegExp and Error family objects
+                    ( a instanceof Error && b instanceof Error  ))
+                {
+                    if (a.toString() !== b.toString()) {
+                        return equal.NOT_EQUAL;
+                    }
+                }
                 if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
                     return equal.PROPERTIES_AND_TYPE;
                 }
