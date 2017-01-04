@@ -634,6 +634,10 @@ console.assert(  equal( array10, arrayLike1, {nonStrict: true} ) );
 console.assert(  equal( array10, arrayLike1, {nonStrict: true} ) === equal.PROPERTIES );
 console.assert( !equal( array10, arrayLike2, {nonStrict: true} ) );
 console.assert(  equal( array10, arrayLike2, {nonStrict: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( array10, arrayLike1, {nonStrict: true, checkPropertyDescritors: true} ) );
+console.assert(  equal( array10, arrayLike1, {nonStrict: true, checkPropertyDescritors: true} ) === equal.PROPERTIES );
+console.assert( !equal( array10, arrayLike2, {nonStrict: true, checkPropertyDescritors: true} ) );
+console.assert(  equal( array10, arrayLike2, {nonStrict: true, checkPropertyDescritors: true} ) === equal.NOT_EQUAL );
 console.log( '-- Ok' );
 
 console.log( 'Objects from function constructor with private properties (obj._b)' );
@@ -704,6 +708,8 @@ console.assert( !equal( notEnumerable, enumerable ) );
 console.assert(  equal( notEnumerable, enumerable ) === equal.NOT_EQUAL );
 console.assert(  equal( notEnumerable, enumarableEmpty ) );
 console.assert(  equal( notEnumerable, enumarableEmpty ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notEnumerable, enumerable, {checkPropertyDescritors: true} ) );
+console.assert(  equal( notEnumerable, enumerable, {checkPropertyDescritors: true} ) === equal.NOT_EQUAL );
 console.assert( !equal( enumerable, enumarableEmpty ) );
 console.assert(  equal( enumerable, enumarableEmpty ) === equal.NOT_EQUAL );
 console.assert(  equal( {}, enumarableEmpty ) );
@@ -742,7 +748,7 @@ console.assert( !equal( {}, enumarableEmpty, {privateProperties: true, allProper
 console.assert(  equal( {}, enumarableEmpty, {privateProperties: true, allProperties: true} ) === equal.NOT_EQUAL );
 console.log( '-- Ok' );
 
-console.log( 'Object with enumerate and not enumerate properties' );
+console.log( 'Objects from class properties created in different levels' );
 let priv = new WeakMap();
 class Parent  {
     constructor(x) {
@@ -821,6 +827,41 @@ console.assert( !equal( c1, c4, {nonEnumerableProperties: true, privatePropertie
 console.assert(  equal( c1, c4, {nonEnumerableProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
 console.assert( !equal( c1, c4, {allProperties: true, privateProperties: true} ) );
 console.assert(  equal( c1, c4, {allProperties: true, privateProperties: true} ) === equal.NOT_EQUAL );
+console.log( '-- Ok' );
+
+
+console.log( 'Object with writable and not writable, configurable and not configurable properties ' );
+var notWritable = {};
+Object.defineProperties( notWritable, {a: {value: 1, writable: false, enumerable: true}, b: {value: 2, writable: false, enumerable: true}} );
+var writable      = {a: 1, b: 2};
+console.assert(  equal( notWritable, writable ) );
+console.assert(  equal( notWritable, writable ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notWritable, writable, {checkPropertyDescritors: true} ) );
+console.assert(  equal( notWritable, writable, {checkPropertyDescritors: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( notWritable, writable, {nonEnumerableProperties: true} ) );
+console.assert(  equal( notWritable, writable, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( notWritable, writable, {allProperties: true} ) );
+console.assert(  equal( notWritable, writable, {allProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notWritable, writable, {nonEnumerableProperties: true, checkPropertyDescritors: true} ) );
+console.assert(  equal( notWritable, writable, {nonEnumerableProperties: true, checkPropertyDescritors: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( notWritable, writable, {allProperties: true, checkPropertyDescritors: true} ) );
+console.assert(  equal( notWritable, writable, {allProperties: true, checkPropertyDescritors: true} ) === equal.NOT_EQUAL );
+
+var notConfigurable = {};
+Object.defineProperties( notConfigurable, {a: {value: 1, configurable: false, enumerable: true}, b: {value: 2, configurable: false, enumerable: true}} );
+var configurable      = {a: 1, b: 2};
+console.assert(  equal( notConfigurable, configurable ) );
+console.assert(  equal( notConfigurable, configurable ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notConfigurable, configurable, {checkPropertyDescritors: true} ) );
+console.assert(  equal( notConfigurable, configurable, {checkPropertyDescritors: true} ) === equal.NOT_EQUAL );
+console.assert(  equal( notConfigurable, configurable, {nonEnumerableProperties: true} ) );
+console.assert(  equal( notConfigurable, configurable, {nonEnumerableProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert(  equal( notConfigurable, configurable, {allPublicProperties: true} ) );
+console.assert(  equal( notConfigurable, configurable, {allPublicProperties: true} ) === equal.PROPERTIES_AND_TYPE );
+console.assert( !equal( notConfigurable, configurable, {nonEnumerableProperties: true, checkPropertyDescritors: true} ) );
+console.assert(  equal( notConfigurable, configurable, {nonEnumerableProperties: true, checkPropertyDescritors: true} ) === equal.NOT_EQUAL );
+console.assert( !equal( notConfigurable, configurable, {allPublicProperties: true, checkPropertyDescritors: true} ) );
+console.assert(  equal( notConfigurable, configurable, {allPublicProperties: true, checkPropertyDescritors: true} ) === equal.NOT_EQUAL);
 console.log( '-- Ok' );
 
 if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {

@@ -4,6 +4,7 @@
 
     function equal(a, b, options) {
         var aValue, bValue, aKeys, bKeys, i,                // Define variables
+            aDescriptor, bDescriptor,
             aType = typeof a,                               // Get value types
             bType = typeof b;
         options = options || {};                            // Optional parameter
@@ -70,6 +71,16 @@
             for (i = 0; i < aKeys.length; i++) {            // Check each property value (recursive call)
                 if (!equal(a[aKeys[i]], b[bKeys[i]], options)) {
                     return equal.NOT_EQUAL;
+                }
+                if (options.checkPropertyDescritors) {      // Check property descriptor (optional)
+                    aDescriptor = Object.getOwnPropertyDescriptor(a, aKeys[i]);
+                    bDescriptor = Object.getOwnPropertyDescriptor(b, bKeys[i]);
+                    if (aDescriptor.enumerable   !== bDescriptor.enumerable ||
+                        aDescriptor.writable     !== bDescriptor.writable   ||
+                        aDescriptor.configurable !== bDescriptor.configurable )
+                    {
+                        return equal.NOT_EQUAL;
+                    }
                 }
             }
             if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
