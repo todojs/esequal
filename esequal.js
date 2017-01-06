@@ -79,8 +79,8 @@
             if (aType !== bType) {                                      // Different type is a not equal value from this point
                 return NOT_EQUAL;
             }
-            if (a instanceof Object &&                                  // Objects
-                b instanceof Object)
+            if (aType === 'object' ||                                   // Objects
+                aType === 'function')                                   // and functions
             {
                 if (aStack.indexOf(a) > -1 &&                           // Check if the object has been previously processed
                     bStack.indexOf(b) > -1)
@@ -184,7 +184,7 @@
             !options.allProperties)
         {
             for (prop in obj) {
-                if (obj.hasOwnProperty(prop) &&
+                if (Object.prototype.hasOwnProperty.call(obj, prop) &&
                     !(prop[0] === '_' && !options.privateProperties))
                 {
                     result.push(prop);

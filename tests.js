@@ -519,6 +519,10 @@ function test() {
     console.assert(  equal( nestedObject1, nestedObject4 ) === equal.PROPERTIES_AND_TYPE );
     console.assert( !equal( nestedObject1, nestedObject5 ) );
     console.assert(  equal( nestedObject1, nestedObject5 ) === equal.NOT_EQUAL );
+    console.assert(  equal( nestedObject1, nestedObject5, {nonStrict: true} ) );
+    console.assert(  equal( nestedObject1, nestedObject5, {nonStrict: true} ) === equal.PROPERTIES );
+    console.assert( !equal( nestedObject1, nestedObject5, {nonStrict: true, allProperties: true} ) );
+    console.assert(  equal( nestedObject1, nestedObject5, {nonStrict: true, allProperties: true} ) === equal.NOT_EQUAL );
     console.log( '-- Ok' );
 
     console.log( 'Two simple arrays should be compared by its content' );
@@ -1249,6 +1253,50 @@ function test() {
     console.assert(  equal( Static1, Static4, {functionSource: true}) === equal.FUNCTION);
     console.assert( !equal( Static1, Static4, {allProperties: true, functionSource: true}));    // TODO: check
     console.assert(  equal( Static1, Static4, {allProperties: true, functionSource: true}) === equal.NOT_EQUAL);
+    console.log('-- Ok');
+
+    console.log('Fix problem with object created with Object.create(null)');
+    var nonConstructor1 = Object.create(null);
+    var nonConstructor2 = Object.create(null);
+    var withConstructor3 = Object.create({});
+    console.assert(  equal( nonConstructor1, nonConstructor2 ));
+    console.assert(  equal( nonConstructor1, nonConstructor2, {nonStrict: true} ));
+    console.assert(  equal( nonConstructor1, nonConstructor2, {allProperties: true} ));
+    console.assert(  equal( nonConstructor1, nonConstructor2, {nonEnumerableProperties: true} ));
+    console.assert(  equal( nonConstructor1, nonConstructor2, {checkPropertyDescritors: true} ));
+    console.assert(  equal( nonConstructor1, withConstructor3, {nonStrict: true} ));
+    console.assert(  equal( nonConstructor1, withConstructor3, {nonStrict: true, nonEnumerableProperties: true} ));
+    console.assert(  equal( nonConstructor1, withConstructor3, {nonStrict: true, checkPropertyDescritors: true} ));
+    console.assert( !equal( nonConstructor1, withConstructor3 ));
+    console.assert( !equal( nonConstructor1, withConstructor3, {allProperties: true} ));
+    console.assert( !equal( nonConstructor1, withConstructor3, {nonEnumerableProperties: true} ));
+    console.assert( !equal( nonConstructor1, withConstructor3, {heckPropertyDescritors: true} ));
+    console.assert( !equal( nonConstructor1, withConstructor3, {nonStrict: true, allProperties: true} ));
+    var nonConstructor4 = Object.create(null);
+    nonConstructor4.a = 1;
+    nonConstructor4.b = false;
+    nonConstructor4.c = "Hello";
+    var nonConstructor5 = Object.create(null);
+    nonConstructor5.a = 1;
+    nonConstructor5.b = false;
+    nonConstructor5.c = "Hello";
+    var withConstructor6 = Object.create({});
+    withConstructor6.a = 1;
+    withConstructor6.b = false;
+    withConstructor6.c = "Hello";
+    console.assert(  equal( nonConstructor4, nonConstructor5 ));
+    console.assert(  equal( nonConstructor4, nonConstructor5, {nonStrict: true} ));
+    console.assert(  equal( nonConstructor4, nonConstructor5, {allProperties: true} ));
+    console.assert(  equal( nonConstructor4, nonConstructor5, {nonEnumerableProperties: true} ));
+    console.assert(  equal( nonConstructor4, nonConstructor5, {checkPropertyDescritors: true} ));
+    console.assert(  equal( nonConstructor4, withConstructor6, {nonStrict: true} ));
+    console.assert(  equal( nonConstructor4, withConstructor6, {nonStrict: true, nonEnumerableProperties: true} ));
+    console.assert(  equal( nonConstructor4, withConstructor6, {nonStrict: true, checkPropertyDescritors: true} ));
+    console.assert( !equal( nonConstructor4, withConstructor6 ));
+    console.assert( !equal( nonConstructor4, withConstructor6, {allProperties: true} ));
+    console.assert( !equal( nonConstructor4, withConstructor6, {nonEnumerableProperties: true} ));
+    console.assert( !equal( nonConstructor4, withConstructor6, {heckPropertyDescritors: true} ));
+    console.assert( !equal( nonConstructor4, withConstructor6, {nonStrict: true, allProperties: true} ));
     console.log('-- Ok');
 
     if (typeof process !== 'undefined' && typeof process.exit !== 'undefined') {
