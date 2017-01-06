@@ -87,35 +87,35 @@
                 {
                     return OBJECT;
                 }
-                aStack.push(a);                                         // Storage objects into stacks for recursive reference
-                bStack.push(b);
                 aKeys = getProperties(a, options);                      // Get properties with options
                 bKeys = getProperties(b, options);
                 if (aKeys.length !== bKeys.length) {                    // Check number of properties
                     return NOT_EQUAL;
                 }
-                if (aKeys.join('') !== bKeys.join('') &&                // Check name of properties
-                    aKeys.sort().join('') !== bKeys.sort().join(''))
-                {
-
-                    return NOT_EQUAL;
-                }
-                i = aKeys.length;
-                while (i--) {                                           // Check each property value (recursive call)
-                    if (!check(a[aKeys[i]], b[bKeys[i]])) {
+                if (aKeys.length > 0) {
+                    if (aKeys.join('') !== bKeys.join('') &&                // Check name of properties
+                        aKeys.sort().join('') !== bKeys.sort().join(''))
+                    {
                         return NOT_EQUAL;
                     }
-                    if (options.checkPropertyDescritors) {              // Check property descriptor (optional)
-                        aDescriptor = Object.getOwnPropertyDescriptor(a, aKeys[i]);
-                        bDescriptor = Object.getOwnPropertyDescriptor(b, bKeys[i]);
-                        if (!aDescriptor && !bDescriptor && options.allProperties) {
-                            continue;
-                        }
-                        if (aDescriptor.enumerable   !== bDescriptor.enumerable ||
-                            aDescriptor.writable     !== bDescriptor.writable   ||
-                            aDescriptor.configurable !== bDescriptor.configurable )
-                        {
+                    aStack.push(a);                                         // Storage objects into stacks for recursive reference
+                    bStack.push(b);
+                    i = aKeys.length;
+                    while (i--) {                                           // Check each property value (recursive call)
+                        if (!check(a[aKeys[i]], b[bKeys[i]])) {
                             return NOT_EQUAL;
+                        }
+                        if (options.checkPropertyDescritors) {              // Check property descriptor (optional)
+                            aDescriptor = Object.getOwnPropertyDescriptor(a, aKeys[i]);
+                            bDescriptor = Object.getOwnPropertyDescriptor(b, bKeys[i]);
+                            if (!aDescriptor && !bDescriptor && options.allProperties) {
+                                continue;
+                            }
+                            if (aDescriptor.enumerable !== bDescriptor.enumerable ||
+                                aDescriptor.writable !== bDescriptor.writable ||
+                                aDescriptor.configurable !== bDescriptor.configurable) {
+                                return NOT_EQUAL;
+                            }
                         }
                     }
                 }
