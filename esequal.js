@@ -126,19 +126,31 @@
                         return NOT_EQUAL;
                     }
                 } else if ((MAP_SUPPORT &&                              // Map
-                            a instanceof Map && a.entries &&
-                            b instanceof Map &&  b.entries) ||
+                            a instanceof Map && a.keys && a.values &&
+                            b instanceof Map &&  b.keys &&  b.values) ||
                            (SET_SUPPORT &&                              // Set
-                            a instanceof Set && a.entries &&
-                            b instanceof Set && b.entries))
+                            a instanceof Set && a.values &&
+                            b instanceof Set && b.values))
                 {
                     if (a.size !== b.size) {                            // Check size
                         return NOT_EQUAL;
                     }
-                    if ( check( Array.from( a.entries() ), Array.from( b.entries() ) ) ) {  // Recursive call as Array
-                        return VALUE_AND_TYPE;
+                    if (a.size > 0) {
+                        if (a instanceof Map && b instanceof Map) {
+                            aKeys = Array.from(a.keys());
+                            bKeys = Array.from(b.keys());
+                            i = aKeys.length;
+                            while (i--) {
+                                if (aKeys[i] !== bKeys[i]) {
+                                    return NOT_EQUAL;
+                                }
+                            }
+                        }
+                        if (check(Array.from(a.values()), Array.from(b.values()))) {
+                            return VALUE_AND_TYPE;
+                        }
+                        return NOT_EQUAL;
                     }
-                    return NOT_EQUAL;
                 } else if (ARRAYBUFFER_SUPPORT && DATAVIEW_SUPPORT &&   // ArrayBuffer
                            a instanceof ArrayBuffer && b instanceof ArrayBuffer)
                 {

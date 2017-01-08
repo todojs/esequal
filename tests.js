@@ -1016,6 +1016,10 @@ function test() {
         map5.set('a', "value associated with a string");
         map5.set(1, "value associated with a number");
         map5.set(keyObj, "value associated with keyObj");
+        var map6 = new Map();
+        map6.set('a', "value associated with a string");
+        map6.set(1, "value associated with a number");
+        map6.set({}, "value associated with keyObj");
         console.assert(  equal( map1, map2 ));
         console.assert(  equal( map1, map2 ) === equal.OBJECT );
         console.assert( !equal( map1, map3 ));
@@ -1024,6 +1028,8 @@ function test() {
         console.assert(  equal( map1, map4 ) === equal.NOT_EQUAL );
         console.assert(  equal( map1, map5 ));
         console.assert(  equal( map1, map5 ) === equal.VALUE_AND_TYPE);
+        console.assert( !equal( map1, map6 ));
+        console.assert(  equal( map1, map6 ) === equal.NOT_EQUAL);
         console.assert(  equal( map1, map2, {nonEnumerableProperties: true} ));
         console.assert(  equal( map1, map2, {nonEnumerableProperties: true} ) === equal.OBJECT );
         console.assert( !equal( map1, map3, {nonEnumerableProperties: true} ));
@@ -1032,6 +1038,8 @@ function test() {
         console.assert(  equal( map1, map4, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
         console.assert(  equal( map1, map5, {nonEnumerableProperties: true} ));
         console.assert(  equal( map1, map5, {nonEnumerableProperties: true} ) === equal.VALUE_AND_TYPE );
+        console.assert( !equal( map1, map6, {nonEnumerableProperties: true} ));
+        console.assert(  equal( map1, map6, {nonEnumerableProperties: true} ) === equal.NOT_EQUAL );
         console.assert(  equal( map1, map2, {allProperties: true} ));
         console.assert(  equal( map1, map2, {allProperties: true} ) === equal.OBJECT );
         console.assert( !equal( map1, map3, {allProperties: true} ));
@@ -1040,6 +1048,8 @@ function test() {
         console.assert(  equal( map1, map4, {allProperties: true} ) === equal.NOT_EQUAL );
         console.assert(  equal( map1, map5, {allProperties: true} ));
         console.assert(  equal( map1, map5, {allProperties: true} ) === equal.VALUE_AND_TYPE );
+        console.assert( !equal( map1, map6, {allProperties: true} ));
+        console.assert(  equal( map1, map6, {allProperties: true} ) === equal.NOT_EQUAL );
         console.log('-- Ok');
     }
     if (typeof Set !== 'undefined') {
