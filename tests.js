@@ -1013,9 +1013,9 @@ function test() {
         map4.set(1, "other value");
         map4.set(keyObj, "other value");
         var map5 = new Map();
-        map5.set('a', "value associated with a string");
-        map5.set(1, "value associated with a number");
         map5.set(keyObj, "value associated with keyObj");
+        map5.set(1, "value associated with a number");
+        map5.set('a', "value associated with a string");
         var map6 = new Map();
         map6.set('a', "value associated with a string");
         map6.set(1, "value associated with a number");
@@ -1067,9 +1067,9 @@ function test() {
         set4.add(1);
         set4.add(false);
         var set5 = new Set();
-        set5.add('a');
-        set5.add(1);
         set5.add({});
+        set5.add(1);
+        set5.add('a');
         console.assert(  equal( set1, set2 ));
         console.assert(  equal( set1, set2 ) === equal.OBJECT );
         console.assert( !equal( set1, set3 ));

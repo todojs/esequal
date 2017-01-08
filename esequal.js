@@ -137,8 +137,8 @@
                     }
                     if (a.size > 0) {
                         if (a instanceof Map && b instanceof Map) {
-                            aKeys = Array.from(a.keys());
-                            bKeys = Array.from(b.keys());
+                            aKeys = Array.from(a.keys()).sort();
+                            bKeys = Array.from(b.keys()).sort();
                             i = aKeys.length;
                             while (i--) {
                                 if (aKeys[i] !== bKeys[i]) {
@@ -146,7 +146,7 @@
                                 }
                             }
                         }
-                        if (check(Array.from(a.values()), Array.from(b.values()))) {
+                        if (check(Array.from(a.entries()).sort(), Array.from(b.entries()).sort())) {
                             return VALUE_AND_TYPE;
                         }
                         return NOT_EQUAL;
