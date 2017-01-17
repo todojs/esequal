@@ -20,7 +20,7 @@
             bStack = [];
         options = options || {};                                        // Optional parameter
         return (function check(a, b) {
-            var aValue, bValue, aKeys, bKeys, i,                        // Define variables
+            var aValue, bValue, aKeys, bKeys, key, i,                   // Define variables
                 aDescriptor, bDescriptor,
                 aType = typeof a,                                       // Get value types
                 bType = typeof b;
@@ -93,21 +93,17 @@
                     return NOT_EQUAL;
                 }
                 if (aKeys.length > 0) {
-                    if (aKeys.join('') !== bKeys.join('') &&                // Check name of properties
-                        aKeys.sort().join('') !== bKeys.sort().join(''))
-                    {
-                        return NOT_EQUAL;
-                    }
                     aStack.push(a);                                         // Storage objects into stacks for recursive reference
                     bStack.push(b);
                     i = aKeys.length;
                     while (i--) {                                           // Check each property value (recursive call)
-                        if (!check(a[aKeys[i]], b[bKeys[i]])) {
+                        key = aKeys[i];
+                        if (!check(a[key], b[key])) {
                             return NOT_EQUAL;
                         }
                         if (options.checkPropertyDescritors) {              // Check property descriptor (optional)
-                            aDescriptor = Object.getOwnPropertyDescriptor(a, aKeys[i]);
-                            bDescriptor = Object.getOwnPropertyDescriptor(b, bKeys[i]);
+                            aDescriptor = Object.getOwnPropertyDescriptor(a, key);
+                            bDescriptor = Object.getOwnPropertyDescriptor(b, key);
                             if (!aDescriptor && !bDescriptor && options.allProperties) {
                                 continue;
                             }
@@ -135,11 +131,11 @@
                     if (a.size !== b.size) {                            // Check size
                         return NOT_EQUAL;
                     }
-                    if (a.size > 0) {
+                    i = a.size;
+                    if (i > 0) {
                         if (a instanceof Map && b instanceof Map) {
                             aKeys = Array.from(a.keys()).sort();
                             bKeys = Array.from(b.keys()).sort();
-                            i = aKeys.length;
                             while (i--) {
                                 if (aKeys[i] !== bKeys[i]) {
                                     return NOT_EQUAL;
