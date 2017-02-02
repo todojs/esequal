@@ -18,7 +18,7 @@
     function equal(a, b, options) {
         var aStack = [],                                                // Stack array
             bStack = [];
-        options = options || {};                                        // Optional parameter
+        options || (options = {});                                      // Optional parameter
         return (function check(a, b) {
             var aValue, bValue, aKeys, bKeys, key, i,                   // Define variables
                 aDescriptor, bDescriptor,
