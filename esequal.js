@@ -30,7 +30,7 @@
                 } else if (aType === 'function') {
                     return FUNCTION;                                    // Equal function
                 }
-            return VALUE_AND_TYPE;                                      // Equal value and type
+                return VALUE_AND_TYPE;                                      // Equal value and type
             }
             /* jshint -W116 */
             if (options.nonStrict && a == b) {                          // Non strict comparison (optional)
@@ -122,11 +122,11 @@
                         return NOT_EQUAL;
                     }
                 } else if ((MAP_SUPPORT &&                              // Map
-                            a instanceof Map && a.keys && a.values &&
-                            b instanceof Map &&  b.keys &&  b.values) ||
-                           (SET_SUPPORT &&                              // Set
-                            a instanceof Set && a.values &&
-                            b instanceof Set && b.values))
+                    a instanceof Map && a.keys && a.values &&
+                    b instanceof Map &&  b.keys &&  b.values) ||
+                    (SET_SUPPORT &&                              // Set
+                    a instanceof Set && a.values &&
+                    b instanceof Set && b.values))
                 {
                     if (a.size !== b.size) {                            // Check size
                         return NOT_EQUAL;
@@ -134,21 +134,24 @@
                     i = a.size;
                     if (i > 0) {
                         if (a instanceof Map && b instanceof Map) {
-                            aKeys = Array.from(a.keys()).sort();
-                            bKeys = Array.from(b.keys()).sort();
+                            aKeys = Array.from(a.keys());
+                            bKeys = Array.from(b.keys());
                             while (i--) {
-                                if (aKeys[i] !== bKeys[i]) {
+                                if (bKeys.indexOf(aKeys[i]) === -1 ||
+                                    !check(a.get(aKeys[i]), b.get(aKeys[i])))
+                                {
                                     return NOT_EQUAL;
                                 }
                             }
+                            return VALUE_AND_TYPE;
                         }
-                        if (check(Array.from(a.entries()).sort(), Array.from(b.entries()).sort())) {
+                        if (check(Array.from(a.values()).sort(), Array.from(b.values()).sort())) {
                             return VALUE_AND_TYPE;
                         }
                         return NOT_EQUAL;
                     }
                 } else if (ARRAYBUFFER_SUPPORT && DATAVIEW_SUPPORT &&   // ArrayBuffer
-                           a instanceof ArrayBuffer && b instanceof ArrayBuffer)
+                    a instanceof ArrayBuffer && b instanceof ArrayBuffer)
                 {
                     aValue = new DataView(a);                           // Get DataView
                     bValue = new DataView(b);
@@ -187,7 +190,7 @@
 
     // get object properties with different scope
     function getProperties(obj, options) {
-        var result = [], prop;
+        var result = [], tmp = [], prop, i;
         if (!options.nonEnumerableProperties &&                         // General case, own enumerable properties
             !options.allProperties)
         {
@@ -200,24 +203,25 @@
             }
             return result;
         }
-        return (
-            options.allProperties  ?                                    // All properties
-                (function getAllProp(obj) {
-                    var proto = Object.getPrototypeOf(obj);
-                    return (
-                        typeof proto === 'object' && proto !== null ?
-                            getAllProp(proto) :
-                            []
-                    ).concat( Object.getOwnPropertyNames(obj) );
-                })(obj).sort() :
-                Object.getOwnPropertyNames(obj)                         // All own properties (enumerable and nonenumerable)
-        ).filter( function(prop, pos, arr) {
-            if (prop[0] === '_' && !options.privateProperties) {
-                return false;                                           // Filter private properties (_)
+        tmp = options.allProperties  ?                                  // All properties
+            (function getAllProp(obj) {
+                var proto = Object.getPrototypeOf(obj);
+                return (
+                    typeof proto === 'object' && proto !== null ?
+                        getAllProp(proto) :
+                        []
+                ).concat( Object.getOwnPropertyNames(obj) );
+            })(obj) :
+            Object.getOwnPropertyNames(obj);                        // All own properties (enumerable and nonenumerable)
+        for (i = 0; i < tmp.length; i++) {
+            prop = tmp[i];
+            if ((prop[0] !== '_' || options.privateProperties) &&
+                (!options.allProperties || tmp.indexOf(prop) === i))
+            {
+                result.push(prop);                                           // Filter private properties (_)
             }
-            return (!options.allProperties ||                           // Eliminate duplicates
-                    pos === 0 || arr[pos - 1] !== prop);
-        });
+        }
+        return result;
     }
 
     // Export for node and browser

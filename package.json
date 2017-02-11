@@ -1,25 +1,27 @@
 {
-  "name": "estype",
+  "name": "esequal",
   "version": "0.1.1",
-  "description": "EcmaScript Type Checker",
-  "main": "estype.js",
+  "description": "EcmaScript Equal - small and very robust deep comparison for EcmaScript 5.1 and 6 (Browser and Node support)",
+  "main": "esequal.js",
   "scripts": {
-    "test": "test.js"
+    "test": "tests.js"
   },
   "keywords": [
-    "type",
+    "equal",
+    "comparison",
+    "compare",
+    "deep",
     "javascript",
-    "ecmascript",
-    "6"
+    "ecmascript"
   ],
   "author": "todojs",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/todojs/estype.git"
+    "url": "git+https://github.com/todojs/esequal.git"
   },
   "bugs": {
-    "url": "https://github.com/todojs/estype/issues"
+    "url": "https://github.com/todojs/esequal/issues"
   },
-  "homepage": "https://github.com/todojs/estype#readme"
+  "homepage": "https://github.com/todojs/esequal#readme"
 }
