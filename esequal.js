@@ -3,8 +3,11 @@
 (function (root) {
     "use strict";
 
-    var MAP_SUPPORT         = typeof Map !== 'undefined';
-    var SET_SUPPORT         = typeof Set !== 'undefined';
+    var MAP_SUPPORT         = typeof Map !== 'undefined' &&
+                              Map.prototype.keys &&
+                              Map.prototype.values;
+    var SET_SUPPORT         = typeof Set !== 'undefined' &&
+                              Map.prototype.values;
     var ARRAYBUFFER_SUPPORT = typeof ArrayBuffer !== 'undefined';
     var DATAVIEW_SUPPORT    = typeof DataView !== 'undefined';
     var NOT_EQUAL           = 0;
@@ -121,12 +124,9 @@
                     if (a.toString() !== b.toString()) {
                         return NOT_EQUAL;
                     }
-                } else if ((MAP_SUPPORT &&                              // Map
-                    a instanceof Map && a.keys && a.values &&
-                    b instanceof Map &&  b.keys &&  b.values) ||
-                    (SET_SUPPORT &&                              // Set
-                    a instanceof Set && a.values &&
-                    b instanceof Set && b.values))
+                } else if (
+                    (MAP_SUPPORT && a instanceof Map && b instanceof Map) ||    // Map
+                    (SET_SUPPORT && a instanceof Set && b instanceof Set))      // Set
                 {
                     if (a.size !== b.size) {                            // Check size
                         return NOT_EQUAL;
