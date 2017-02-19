@@ -3,14 +3,15 @@
 (function (root) {
     "use strict";
 
-    var MAP_SUPPORT         = typeof Map !== 'undefined' &&
+    var MAP_SUPPORT         = typeof Map !== 'undefined' &&         // Check Map support
                               Map.prototype.keys &&
                               Map.prototype.values;
-    var SET_SUPPORT         = typeof Set !== 'undefined' &&
+    var SET_SUPPORT         = typeof Set !== 'undefined' &&         // Check Set support
                               Map.prototype.values;
-    var ARRAYBUFFER_SUPPORT = typeof ArrayBuffer !== 'undefined';
-    var DATAVIEW_SUPPORT    = typeof DataView !== 'undefined';
-    var NOT_EQUAL           = 0;
+    var ARRAYBUFFER_SUPPORT = typeof ArrayBuffer !== 'undefined';   // Check ArrayBuffer support
+    var DATAVIEW_SUPPORT    = typeof DataView !== 'undefined';      // Check DataView support
+
+    var NOT_EQUAL           = 0;                                    // Return values
     var VALUE               = 1;
     var VALUE_AND_TYPE      = 2;
     var PROPERTIES          = 3;
@@ -19,92 +20,92 @@
     var FUNCTION            = 6;
 
     function equal(a, b, options) {
-        var aStack = [],                                                // Stack array
+        var aStack = [],                                            // Stack array
             bStack = [];
-        options || (options = {});                                      // Optional parameter
+        options || (options = {});                                  // Optional parameter
         return (function check(a, b) {
-            var aValue, bValue, aKeys, bKeys, key, i,                   // Define variables
+            var aValue, bValue, aKeys, bKeys, key, i,               // Define variables
                 aDescriptor, bDescriptor,
-                aType = typeof a,                                       // Get value types
+                aType = typeof a,                                   // Get value types
                 bType = typeof b;
-            if (a === b) {                                              // Strict comparison
+            if (a === b) {                                          // Strict comparison
                 if (aType === 'object' && a !== null) {
-                    return OBJECT;                                      // Equal object
+                    return OBJECT;                                  // Equal object
                 } else if (aType === 'function') {
-                    return FUNCTION;                                    // Equal function
+                    return FUNCTION;                                // Equal function
                 }
-                return VALUE_AND_TYPE;                                      // Equal value and type
+                return VALUE_AND_TYPE;                              // Equal value and type
             }
             /* jshint -W116 */
-            if (options.nonStrict && a == b) {                          // Non strict comparison (optional)
-                return VALUE;                                           // Equal value (different type)
+            if (options.nonStrict && a == b) {                      // Non strict comparison (optional)
+                return VALUE;                                       // Equal value (different type)
             }
             /* jshint +W116 */
-            if (aType === 'undefined' ||                                // undefined and null are always different
+            if (aType === 'undefined' ||                            // undefined and null are always different
                 bType === 'undefined' ||
                 a === null ||
                 b === null)
             {
                 return NOT_EQUAL;
             }
-            if (aType === 'number' &&                                   // Special case: Not is a Number (NaN !== NaN)
+            if (aType === 'number' &&                               // Special case: Not is a Number (NaN !== NaN)
                 bType === 'number' &&
                 isNaN(a) &&
                 isNaN(b))
             {
                 return VALUE_AND_TYPE;
             }
-            if (typeof a.valueOf === 'function' &&                      // valueOf() is a function in both values
+            if (typeof a.valueOf === 'function' &&                  // valueOf() is a function in both values
                 typeof b.valueOf === 'function')
             {
-                aValue = a.valueOf();                                   // Get valueOf()
+                aValue = a.valueOf();                               // Get valueOf()
                 bValue = b.valueOf();
-                if (aValue !== a || bValue !== b) {                     // The valueOf's return is different that the base value
-                    if (aValue === bValue) {                            // The valueOf's return is the same for both values
-                        if (a.constructor === b.constructor) {          // It's the same constructor and as result is the same type
+                if (aValue !== a || bValue !== b) {                 // The valueOf's return is different that the base value
+                    if (aValue === bValue) {                        // The valueOf's return is the same for both values
+                        if (a.constructor === b.constructor) {      // It's the same constructor and as result is the same type
                             return VALUE_AND_TYPE;
                         }
-                        if (options.nonStrict) {                        // Non strict comparison (optional)
-                            return VALUE;                               // Equal value (different type)
+                        if (options.nonStrict) {                    // Non strict comparison (optional)
+                            return VALUE;                           // Equal value (different type)
                         }
-                        return NOT_EQUAL;                               // Strict comparison
+                        return NOT_EQUAL;                           // Strict comparison
                     }
                     /* jshint -W116 */
-                    if (options.nonStrict &&                            // Non strict comparison (optional)
+                    if (options.nonStrict &&                        // Non strict comparison (optional)
                         aValue == bValue)
                     {
-                        return VALUE;                                   // Equal value (different type)
+                        return VALUE;                               // Equal value (different type)
                     }
                     /* jshint +W116 */
-                    return NOT_EQUAL;                                   // Not equal
+                    return NOT_EQUAL;                               // Not equal
                 }
             }
-            if (aType !== bType) {                                      // Different type is a not equal value from this point
+            if (aType !== bType) {                                  // Different type is a not equal value from this point
                 return NOT_EQUAL;
             }
-            if (aType === 'object' ||                                   // Objects
-                aType === 'function')                                   // and functions
+            if (aType === 'object' ||                               // Objects
+                aType === 'function')                               // and functions
             {
-                if (aStack.indexOf(a) > -1 &&                           // Check if the object has been previously processed
+                if (aStack.indexOf(a) > -1 &&                       // Check if the object has been previously processed
                     bStack.indexOf(b) > -1)
                 {
                     return OBJECT;
                 }
-                aKeys = getProperties(a, options);                      // Get properties with options
+                aKeys = getProperties(a, options);                  // Get properties with options
                 bKeys = getProperties(b, options);
-                if (aKeys.length !== bKeys.length) {                    // Check number of properties
+                if (aKeys.length !== bKeys.length) {                // Check number of properties
                     return NOT_EQUAL;
                 }
                 if (aKeys.length > 0) {
-                    aStack.push(a);                                         // Storage objects into stacks for recursive reference
+                    aStack.push(a);                                 // Storage objects into stacks for recursive reference
                     bStack.push(b);
                     i = aKeys.length;
-                    while (i--) {                                           // Check each property value (recursive call)
+                    while (i--) {                                   // Check each property value (recursive call)
                         key = aKeys[i];
                         if (!check(a[key], b[key])) {
                             return NOT_EQUAL;
                         }
-                        if (options.checkPropertyDescritors) {              // Check property descriptor (optional)
+                        if (options.checkPropertyDescritors) {      // Check property descriptor (optional)
                             aDescriptor = Object.getOwnPropertyDescriptor(a, key);
                             bDescriptor = Object.getOwnPropertyDescriptor(b, key);
                             if (!aDescriptor && !bDescriptor && options.allProperties) {
@@ -125,10 +126,12 @@
                         return NOT_EQUAL;
                     }
                 } else if (
-                    (MAP_SUPPORT && a instanceof Map && b instanceof Map) ||    // Map
-                    (SET_SUPPORT && a instanceof Set && b instanceof Set))      // Set
+                    (MAP_SUPPORT &&
+                        a instanceof Map && b instanceof Map) ||    // Map
+                    (SET_SUPPORT &&
+                        a instanceof Set && b instanceof Set))      // Set
                 {
-                    if (a.size !== b.size) {                            // Check size
+                    if (a.size !== b.size) {                        // Check size
                         return NOT_EQUAL;
                     }
                     i = a.size;
@@ -151,36 +154,38 @@
                         return NOT_EQUAL;
                     }
                 } else if (ARRAYBUFFER_SUPPORT && DATAVIEW_SUPPORT &&   // ArrayBuffer
-                    a instanceof ArrayBuffer && b instanceof ArrayBuffer)
+                    (a instanceof ArrayBuffer || a instanceof DataView) &&
+                    (b instanceof ArrayBuffer || b instanceof DataView))
                 {
-                    aValue = new DataView(a);                           // Get DataView
-                    bValue = new DataView(b);
-                    if (aValue.byteLength !== bValue.byteLength) {      // Check size
+                    aValue = a instanceof ArrayBuffer ? new DataView(a) : a;
+                    bValue = b instanceof ArrayBuffer ? new DataView(b) : b;
+                    if (aValue.byteLength !== bValue.byteLength) {  // Check size
                         return NOT_EQUAL;
                     }
-                    i = bValue.byteLength;                              // Check content
+                    i = bValue.byteLength;                          // Check content
                     while (i--) {
                         if (aValue.getInt8(i) !== bValue.getInt8(i)) {  // nonStrict comparison is not supported
                             return NOT_EQUAL;
                         }
                     }
-                } else if ((aType === 'function')) {                    // Function type
+                } else if ((aType === 'function')) {                // Function type
                     if (options.functionSource && a.toString() === b.toString()) {
                         return FUNCTION;
                     }
                     return NOT_EQUAL;
                 }
-                if (a.constructor === b.constructor) {                  // It's the same constructor
-                    return PROPERTIES_AND_TYPE;                         // and as result is the same type
+                if (a.constructor === b.constructor) {              // It's the same constructor
+                    return PROPERTIES_AND_TYPE;                     // and as result is the same type
                 }
-                if (options.nonStrict) {                                // Non strict comparison (optional)
-                    return PROPERTIES;                                  // Equals property and different type
+                if (options.nonStrict) {                            // Non strict comparison (optional)
+                    return PROPERTIES;                              // Equals property and different type
                 }
             }
-            return NOT_EQUAL;                                           // Not equal
+            return NOT_EQUAL;                                       // Not equal
         })(a, b);
     }
-    equal.NOT_EQUAL           = NOT_EQUAL           ;
+
+    equal.NOT_EQUAL           = NOT_EQUAL           ;               // Public return values
     equal.VALUE               = VALUE               ;
     equal.VALUE_AND_TYPE      = VALUE_AND_TYPE      ;
     equal.PROPERTIES          = PROPERTIES          ;
@@ -191,7 +196,7 @@
     // get object properties with different scope
     function getProperties(obj, options) {
         var result = [], tmp = [], prop, i;
-        if (!options.nonEnumerableProperties &&                         // General case, own enumerable properties
+        if (!options.nonEnumerableProperties &&                     // General case, own enumerable properties
             !options.allProperties)
         {
             for (prop in obj) {
@@ -203,7 +208,7 @@
             }
             return result;
         }
-        tmp = options.allProperties  ?                                  // All properties
+        tmp = options.allProperties  ?                              // All properties
             (function getAllProp(obj) {
                 var proto = Object.getPrototypeOf(obj);
                 return (
@@ -218,7 +223,7 @@
             if ((prop[0] !== '_' || options.privateProperties) &&
                 (!options.allProperties || tmp.indexOf(prop) === i))
             {
-                result.push(prop);                                           // Filter private properties (_)
+                result.push(prop);                                  // Filter private properties (_)
             }
         }
         return result;
