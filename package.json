@@ -1,6 +1,6 @@
 {
   "name": "esequal",
-  "version": "0.1.4",
+  "version": "0.1.15",
   "description": "EcmaScript Equal - small and very robust deep comparison for EcmaScript 5.1 and 6 (Browser and Node support)",
   "main": "esequal.js",
   "scripts": {
